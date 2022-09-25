@@ -1,0 +1,46 @@
+---
+
+- hosts: all
+  become: true
+  pre_tasks:
+          - name: install updates
+            tags: always
+            apt:
+                    upgrade: dist
+                    update_cache: yes
+            when: ansible_distribution == "Ubuntu"
+
+- hosts: web_servers
+  become: true
+  tasks:
+
+          - name: install apache and php
+            tags: apache,apache2,ubuntu
+            apt:
+                    name:
+                            - apache2
+                            - libapache2-mod-php
+                    state: latest
+            when: ansible_distribution == "Ubuntu"
+
+          - name: copy default html file for site
+            tags: apache,apache2,ubuntu
+            copy:
+                    src: default_site.html
+                    dest: /var/www/html/index.html
+                    owner: vagrant
+                    group: vagrant
+                    mode: 0644
+
+- hosts: db_servers
+  become: true
+  tasks:
+
+          - name: Install FTP package on Ubuntu
+            tags: ftp
+            apt:
+
+                    name:
+                            - vsftpd
+                    state: present
+            when: ansible_distribution == "Ubuntu"

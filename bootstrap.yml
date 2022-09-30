@@ -1,0 +1,34 @@
+---
+
+- hosts: all
+  become: true
+  tasks:
+
+          - name: install updates (ubuntu) optional
+            tags: always
+            apt:
+                    upgrade: dist
+                    update_cache: yes
+            when: ansible_distribution == "Ubuntu"
+
+
+          - name: create new user called conaj to access remote server
+            tags: always
+            user:
+                    name: conaj
+                    groups: root
+
+          - name: add ssh key for conaj
+            tags: always
+            authorized_key:
+                    user: conaj
+                    key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJpUYwWkP77sgUxNH4RNC5SDEAXvzxDk384GgvwbCdF/ ansible"
+
+          - name: add sudoers file for conaj
+            tags: always
+            copy:
+                    src: sudoer_conaj
+                    dest: /etc/sudoers.d/conaj
+                    owner: root
+                    group: root
+                    mode: 0440  

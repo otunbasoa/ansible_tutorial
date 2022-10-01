@@ -1,0 +1,4 @@
+- name: add ssh key for conaj
+  authorized_key:
+          user: conaj
+          key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJpUYwWkP77sgUxNH4RNC5SDEAXvzxDk384GgvwbCdF/ ansible"
